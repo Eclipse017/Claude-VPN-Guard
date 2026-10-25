@@ -1,0 +1,66 @@
+{
+  "notificationsEnabled": false,
+  "clickSoundEnabled": false,
+  "chatMemoryRounds": 0,
+  "whisperImageEnabled": false,
+  "chatImageEnabled": false,
+  "pets": [
+    {
+      "id": "main",
+      "name": "书娘",
+      "size": 390,
+      "display": "desktop",
+      "balanceEnabled": false,
+      "whisperEnabled": false,
+      "workStatusEnabled": false,
+      "fixedEnabled": true,
+      "trayEnabled": true,
+      "position": {
+        "corner": "bottom-right",
+        "marginX": 45,
+        "marginY": 65
+      }
+    }
+  ],
+  "font": {
+    "family": "yahei",
+    "size": 16
+  },
+  "animations": {
+    "idle": [
+      "idle"
+    ],
+    "turn": [],
+    "drag": [
+      "wave"
+    ],
+    "clicks": [
+      "wave"
+    ],
+    "moves": {
+      "default": {
+        "minDist": 80,
+        "maxDist": 150,
+        "margin": 20,
+        "leadSec": 2,
+        "tailSec": 2
+      },
+      "actions": []
+    },
+    "categories": [],
+    "events": {
+      "balance": [],
+      "whisper": [],
+      "workStatus": []
+    }
+  },
+  "animationWeights": {
+    "idle": 100,
+    "turn": 0,
+    "move": 0
+  },
+  "eventsRefreshSec": {
+    "balance": 86400,
+    "whisper": 86400
+  }
+}

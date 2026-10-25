@@ -1,0 +1,21 @@
+{
+  "name": "shuniang-vpn-guard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "书娘守护：dsh-pet 独立桌宠与 Claude 启动保护",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "preview": "electron src/main.cjs --preview",
+    "start": "electron src/main.cjs",
+    "check": "node src/sensor.mjs --once --policy local/policy.json"
+  },
+  "dependencies": {
+    "yaml": "2.9.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "esbuild": "0.25.12"
+  }
+}

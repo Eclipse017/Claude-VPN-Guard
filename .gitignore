@@ -1,0 +1,16 @@
+node_modules/
+.work/
+dist/
+artifacts/
+local/
+*.log
+*.zip
+*.reg
+*.lnk
+*.pfx
+*.key
+policy.local.json
+vendor/dsh-pet/assets/fonts/
+vendor/dsh-pet/assets/sound/
+vendor/dsh-pet/runtime/electron-helper/shuniang-atlas.png
+vendor/dsh-pet/lib/

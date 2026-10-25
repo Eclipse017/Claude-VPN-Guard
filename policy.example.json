@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "enrolled": false,
+  "configPath": "C:\\Users\\YOUR_USER\\AppData\\Roaming\\com.follow\\clash\\config.yaml",
+  "controller": "http://127.0.0.1:9090",
+  "proxyPort": 7890,
+  "group": "CLAUDE",
+  "node": "YOUR_APPROVED_NODE",
+  "nodeDigest": "REPLACE_WITH_LOCALLY_VERIFIED_SHA256",
+  "allowedExitIps": [],
+  "country": "TW"
+}
