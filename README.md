@@ -4,7 +4,16 @@
 
 **[下载安装包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-0.2.0-preview.1-Setup.exe)** · **[下载图文素材包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip)** · [使用教程](docs/USER-GUIDE.md) · [常见问题](docs/FAQ.md)
 
-<p align="center"><img src="docs/media/01-cover.png" width="560" alt="书娘守护：一键安装、中文向导、桌宠互动"></p>
+<p align="center"><img src="docs/media/interaction.gif" width="540" alt="书娘在桌面上打招呼、回应摸头、一起读书的互动演示"></p>
+
+18 秒看三种互动：[高清 MP4](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-v0.2.0.mp4) · [完整动画素材包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-Demo-v0.2.0.zip)。桌面为合成场景，使用当前版本的表情与台词。
+
+<details>
+<summary>查看封面</summary>
+
+<p align="center"><img src="docs/media/01-cover.png" width="540" alt="书娘守护：一键安装、中文向导、桌宠互动"></p>
+
+</details>
 
 ## 一键安装，中文上手
 
@@ -33,6 +42,15 @@
 
 系统保护启用后，会核验节点、实时分流、出口 IP 与地区、TUN 路由，以及 Claude 专用网络规则。失败、超时或无法确认时，按策略拒绝启动。
 
+<details>
+<summary>查看：VPN 未开启时，Claude 启动入口保持锁定</summary>
+
+<p align="center"><img src="docs/media/vpn-off-blocked.png" width="540" alt="模拟 VPN 未开启：书娘提示入口已锁住，Claude 启动按钮禁用"></p>
+
+使用程序界面与模拟状态制作，保护需成功启用后生效；此图不代表真实断网测试。
+
+</details>
+
 网络规则用于限制受保护的 Claude 应用绕过指定通路直接联网。中立探针只核验自身出口链路，不代表 Claude 服务端到端可用，也不能认证账号或所在地资格。
 
 这不是防封号工具，不保证零泄漏或账号安全。网页版、CLI、Cowork 虚拟机及其他设备不在完整覆盖范围内。[适用范围与保护说明 →](docs/FAQ.md)
@@ -44,6 +62,7 @@
 | 7 张配图：封面、功能、教程、适用范围 | [在线查看](docs/promotion/README.md) |
 | 标题与正文 | [可直接复制的文案](docs/promotion/COPY.md) |
 | 图文素材包 | [下载 ZIP](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip) |
+| 互动视频与动画素材（含 VPN 未开启截图） | [MP4](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-v0.2.0.mp4) · [完整 ZIP](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-Demo-v0.2.0.zip) |
 | 安装包、便携包与校验文件 | [版本发布页](https://github.com/Eclipse017/ShuniangGuard/releases/tag/v0.2.0-preview.1) |
 
 图中界面来自程序演示截图，示例路径与节点不是实际用户配置。封面角色为 AI 宣传插画。

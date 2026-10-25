@@ -20,4 +20,10 @@
 
 图文对应 0.2.0-preview.1。介绍功能时请保留预发布状态与适用范围，不作防封号、零泄漏或账号安全承诺。
 
+## 互动动画与状态截图
+
+[18 秒互动视频 MP4](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-v0.2.0.mp4) · [完整动画素材包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-Demo-v0.2.0.zip) · [VPN 未开启截图](../media/vpn-off-blocked.png)
+
+动画素材包包含 MP4、完整 GIF、三种互动的独立动图与静态图，以及 VPN 未开启时的锁定状态图。桌面为合成场景，气泡放大展示；锁定图使用模拟状态，不代表真实断网测试。
+
 [素材与许可](../../NOTICE.md) · [返回首页](../../README.md)
