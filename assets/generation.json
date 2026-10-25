@@ -1,9 +1,0 @@
-{
-  "tool": "built-in imagegen",
-  "model": "not returned",
-  "date": "2026-10-25",
-  "file": "shuniang-atlas.png",
-  "layout": {"columns": 3, "rows": 2, "states": ["idle", "blink", "wave", "read", "blocked", "pat"]},
-  "prompt": "Use case: illustration-story. Asset type: production desktop pet sprite atlas, original character design for an independent open-source app '书娘守护'. Create exactly ONE transparent PNG sprite atlas, arranged in a precise 3 columns by 2 rows grid of six square equal-size cells, no grid lines and no text. Each cell contains the SAME full-body cute chibi orange/copper-haired adult-coded librarian girl with a small copper book hairclip, round amber glasses, ivory blouse, dark brown pinafore skirt and brown ankle boots, holding a small closed burnt-orange book. Distinct original design, not copying any known illustration or mascot, no company logo. Clean hand-drawn anime line art, warm pastel palette, polished crisp silhouettes for 180px desktop display. Consistent scale and body placement all six cells, completely transparent unused space, generous 12% padding inside each cell so nothing touches an edge. Top row left: idle smiling holding book at chest. Top row middle: eyes softly closed, same idle pose, subtle blink. Top row right: happy waving hello one hand, book held by other. Bottom row left: reading an open book looking down thoughtfully. Bottom row middle: mildly concerned, hugging book with a tiny orange shield pin on clothes, no floating symbols. Bottom row right: delighted eyes closed, cheeks pink after being patted on head. Keep character fully contained within each respective cell. There must be six complete characters, no backgrounds, no labels, no speech bubbles, no watermarks. Output ideally 1536x1024, exactly 3:2 canvas aspect ratio, with the six square cells precisely aligned.",
-  "postprocessing": "No raster edit. Runtime Canvas selects atlas cells and adds breathing offset."
-}
