@@ -1,4 +1,4 @@
-param([string]$Version='0.1.0-preview.1')
+param([string]$Version='0.1.0-preview.2')
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 $name='ShuniangGuard-'+$Version+'-win-x64'
@@ -8,10 +8,12 @@ New-Item -ItemType Directory -Path $out,(Join-Path $out 'app\vendor\dsh-pet\asse
 Copy-Item (Join-Path $root 'node_modules\electron\dist') (Join-Path $out 'runtime') -Recurse
 foreach($part in 'assets','docs'){Copy-Item (Join-Path $root $part) (Join-Path $out 'app') -Recurse}
 New-Item -ItemType Directory -Path (Join-Path $out 'app\scripts') -Force | Out-Null
-foreach($file in 'build.mjs','Build-Guard.ps1','Install-Guard.ps1','Update-Guard.ps1','Restore-Guard.ps1','Package.ps1','Publish-GitHub.ps1'){Copy-Item (Join-Path $root ('scripts\'+$file)) (Join-Path $out 'app\scripts')}
+foreach($file in 'build.mjs','Build-Guard.ps1','Install-Guard.ps1','Update-Guard.ps1','Restore-Guard.ps1','Package.ps1','Publish-GitHub.ps1','Backup-ClaudeNetworkGuard.ps1','Build-NetworkGuard.ps1','Test-ClaudeNetworkGuard.ps1','Install-ClaudeNetworkGuard.ps1','Refresh-ClaudeNetworkGuard.ps1','Remove-ClaudeNetworkGuard.ps1'){Copy-Item (Join-Path $root ('scripts\'+$file)) (Join-Path $out 'app\scripts')}
 # Only reviewed desktop/launch-guard source files; unrelated workspace subprojects are excluded.
 New-Item -ItemType Directory -Path (Join-Path $out 'app\src') -Force | Out-Null
 Get-ChildItem (Join-Path $root 'src') -File | Copy-Item -Destination (Join-Path $out 'app\src')
+Copy-Item (Join-Path $root 'src\network') (Join-Path $out 'app\src') -Recurse
+Copy-Item (Join-Path $root 'dist\network') (Join-Path $out 'app\dist') -Recurse
 New-Item -ItemType Directory -Path (Join-Path $out 'app\licenses') -Force | Out-Null
 foreach($dependency in 'yaml','zod'){Copy-Item (Join-Path $root ('node_modules\'+$dependency+'\LICENSE')) (Join-Path $out ('app\licenses\'+$dependency+'-LICENSE.txt'))}
 foreach($file in 'README.md','NOTICE.md','LICENSE','policy.example.json','package.json','package-lock.json'){Copy-Item (Join-Path $root $file) (Join-Path $out 'app')}

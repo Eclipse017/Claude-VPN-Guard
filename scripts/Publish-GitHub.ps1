@@ -1,4 +1,4 @@
-param([switch]$CreateRepository,[string]$ReleaseZip,[string]$Tag='v0.1.0-preview.1')
+param([switch]$CreateRepository,[string]$ReleaseZip,[string]$Tag='v0.1.0-preview.2')
 $ErrorActionPreference='Stop'
 $env:GIT_TERMINAL_PROMPT='0';$env:GCM_INTERACTIVE='never'
 $lines=(@('protocol=https','host=github.com','') -join "`n") | git credential fill

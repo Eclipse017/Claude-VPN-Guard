@@ -9,6 +9,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Net.NetworkInformation;
+using System.ServiceProcess;
+using System.Threading;
+using System.Diagnostics;
 
 public sealed class NetworkGuardConfig {
     public int Schema;
@@ -118,8 +121,9 @@ public static class ClaudeNetworkGuard {
     }
     static void EnsureOwner(IntPtr engine,Guid provider,Guid sub,Memory mem){
         IntPtr p;uint status=FwpmProviderGetByKey0(engine,ref provider,out p);
-        if(status==ProviderNotFound){var info=new ProviderInfo{key=provider,display=new Display{name="ClaudeNetworkGuard",description="VPN_GUARD application-scoped network protection"},flags=1};Check(FwpmProviderAdd0(engine,ref info,IntPtr.Zero),"Add provider");}
-        else {Check(status,"Read provider");try{var info=Read<ProviderInfo>(p);if(info.display.name!="ClaudeNetworkGuard"||info.flags!=1)throw new InvalidDataException("Foreign provider ownership");}finally{FwpmFreeMemory0(ref p);}}
+        string service=provider==Provider?"ClaudeNetworkGuard":null;
+        if(status==ProviderNotFound){var info=new ProviderInfo{key=provider,display=new Display{name="ClaudeNetworkGuard",description="VPN_GUARD application-scoped network protection"},flags=1,service=service};Check(FwpmProviderAdd0(engine,ref info,IntPtr.Zero),"Add provider");}
+        else {Check(status,"Read provider");try{var info=Read<ProviderInfo>(p);if(info.display.name!="ClaudeNetworkGuard"||info.flags!=1||info.service!=service)throw new InvalidDataException("Foreign provider ownership or service association");}finally{FwpmFreeMemory0(ref p);}}
         status=FwpmSubLayerGetByKey0(engine,ref sub,out p);
         if(status==SublayerNotFound){var info=new SublayerInfo{key=sub,display=new Display{name="ClaudeNetworkGuard",description="Application-only blocking; existing firewall rules unchanged"},flags=1,provider=mem.Structure(provider),weight=0xE000};Check(FwpmSubLayerAdd0(engine,ref info,IntPtr.Zero),"Add sublayer");}
         else {Check(status,"Read sublayer");try{var info=Read<SublayerInfo>(p);if(info.provider==IntPtr.Zero||Read<Guid>(info.provider)!=provider||info.display.name!="ClaudeNetworkGuard")throw new InvalidDataException("Foreign sublayer ownership");}finally{FwpmFreeMemory0(ref p);}}
@@ -147,5 +151,24 @@ public static class ClaudeNetworkGuard {
             }finally{if(transaction)FwpmTransactionAbort0(engine);}
         }}finally{FwpmEngineClose0(engine);}
     }
-    public static int Main(string[] args){try{if(args.Length!=3)throw new ArgumentException("Usage: operation config.json result.json");var cfg=Json.Deserialize<NetworkGuardConfig>(File.ReadAllText(args[1]));var result=Run(args[0],cfg);File.WriteAllText(args[2],Json.Serialize(result),new UTF8Encoding(false));return 0;}catch(Exception e){if(args.Length==3)File.WriteAllText(args[2],Json.Serialize(new{Status="FAILED",Error=e.ToString()}));return 1;}}
+    public static int Main(string[] args){try{if(args.Length==1&&args[0]=="--service"){ServiceBase.Run(new GuardService());return 0;}if(args.Length!=3)throw new ArgumentException("Usage: operation config.json result.json");var cfg=Json.Deserialize<NetworkGuardConfig>(File.ReadAllText(args[1]));var result=Run(args[0],cfg);File.WriteAllText(args[2],Json.Serialize(result),new UTF8Encoding(false));return 0;}catch(Exception e){if(args.Length==3)File.WriteAllText(args[2],Json.Serialize(new{Status="FAILED",Error=e.ToString()}));return 1;}}
+    sealed class GuardService:ServiceBase {
+        readonly ManualResetEvent stop=new ManualResetEvent(false);Thread worker;
+        public GuardService(){ServiceName="ClaudeNetworkGuard";CanStop=true;AutoLog=true;}
+        protected override void OnStart(string[] args){worker=new Thread(Work);worker.IsBackground=true;worker.Start();}
+        protected override void OnStop(){stop.Set();if(worker!=null&&!worker.Join(15000))RequestAdditionalTime(15000);}
+        void Work(){
+            string root=AppDomain.CurrentDomain.BaseDirectory,data=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),"ClaudeNetworkGuard");
+            do {
+                try {using(var mutex=new Mutex(false,@"Global\ClaudeNetworkGuardReconcile")){
+                    bool held=false;try {
+                        held=mutex.WaitOne(10000);if(!held)continue;
+                        object value;try {var cfg=Json.Deserialize<NetworkGuardConfig>(File.ReadAllText(Path.Combine(root,"policy.json")));if(cfg.TestMode)throw new InvalidDataException("Service must not use probe policy");value=ClaudeNetworkGuard.Run("apply",cfg);}catch(Exception e){value=new{Status="FAILED",Error=e.ToString()};}
+                        var status=Json.Deserialize<Dictionary<string,object>>(Json.Serialize(value));status["CheckedAt"]=DateTime.UtcNow.ToString("o");
+                        string target=Path.Combine(data,"status.json"),temp=target+".service.tmp";File.WriteAllText(temp,Json.Serialize(status),new UTF8Encoding(false));if(File.Exists(target))File.Replace(temp,target,null);else File.Move(temp,target);
+                    }finally{if(held)mutex.ReleaseMutex();}
+                }}catch(Exception e){try{EventLog.WriteEntry("ClaudeNetworkGuard",e.Message,EventLogEntryType.Error);}catch{}}
+            }while(!stop.WaitOne(30000));
+        }
+    }
 }

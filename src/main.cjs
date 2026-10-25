@@ -71,6 +71,7 @@ app.whenReady().then(()=>{
 const verifyIndex=process.argv.indexOf('--verify-ui');
 if(verifyIndex>=0) {
   const out=path.resolve(process.argv[verifyIndex+1]);fs.mkdirSync(out,{recursive:true});
+  const snapshot=async(w,file)=>{let last;for(let i=0;i<4;i++){try{await w.webContents.executeJavaScript('new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))');const shot=await w.webContents.capturePage();if(shot.isEmpty())throw new Error('Empty window capture');fs.writeFileSync(file,shot.toPNG());return;}catch(e){last=e;await new Promise(r=>setTimeout(r,700));}}throw last;};
   app.whenReady().then(()=>setTimeout(async()=>{
     try {
       const pets=BrowserWindow.getAllWindows().filter(w=>w.webContents.getURL().includes('electron-helper/index.html'));
@@ -81,13 +82,14 @@ if(verifyIndex>=0) {
       w.webContents.send('book:pet','pat');
       await new Promise(r=>setTimeout(r,300));
       const after=await w.webContents.executeJavaScript('window.__bookDebug');
-      fs.writeFileSync(path.join(out,'pet.png'),(await w.webContents.capturePage()).toPNG());
+      await snapshot(w,path.join(out,'pet.png'));
       showPanel();await new Promise(r=>setTimeout(r,800));
       const panelState=await panel.webContents.executeJavaScript('({disabled:document.querySelector("#launch").disabled,title:document.querySelector("h1").textContent})');
       const launchResult=await panel.webContents.executeJavaScript('window.book.action("launch")');
-      fs.writeFileSync(path.join(out,'panel.png'),(await panel.webContents.capturePage()).toPNG());
-      const ok=after.interaction==='pat'&&panelState.disabled&&launchResult.ok===false;
-      fs.writeFileSync(path.join(out,'ui.json'),JSON.stringify({ok,before,after,panelState,launchResult,claudeLaunchAttempted:false},null,2));
+      await snapshot(panel,path.join(out,'panel.png'));
+      const layout=await panel.webContents.executeJavaScript(`(()=>{const ul=document.querySelector('#checks');while(ul.children.length<14)ul.append(ul.firstElementChild.cloneNode(true));const b=document.querySelector('#launch').getBoundingClientRect();return {checks:ul.children.length,buttonVisible:b.bottom<=innerHeight,checkListScrollable:ul.scrollHeight>ul.clientHeight,bodyFits:document.body.scrollHeight<=innerHeight+1}})()`);
+      const ok=after.interaction==='pat'&&panelState.disabled&&launchResult.ok===false&&layout.buttonVisible&&layout.checkListScrollable&&layout.bodyFits;
+      fs.writeFileSync(path.join(out,'ui.json'),JSON.stringify({ok,before,after,panelState,launchResult,layout,claudeLaunchAttempted:false},null,2));
       app.exit(ok?0:1);
     }catch(e){fs.writeFileSync(path.join(out,'error.txt'),String(e.stack));app.exit(1);}
   },7000));

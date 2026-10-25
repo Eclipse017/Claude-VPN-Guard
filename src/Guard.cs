@@ -22,6 +22,18 @@ class BookGuard {
     public class Check { public string id; public bool ok; public string message; }
     public class Evidence { public int schema; public bool allowed; public string checkedAt; public string reason; public Check[] checks; }
     public class Status { public int schema=1; public bool allowed; public string checkedAt; public string reason; public Check[] checks; public bool monitor=true; }
+    public class NetworkState { public string Status,CheckedAt,Provider; public bool FailClosed; public int FilterCount; }
+    static bool ValidNetwork(NetworkState state) {
+        return state!=null&&state.Status=="PASS"&&!state.FailClosed&&state.FilterCount>=8&&
+            state.Provider=="b78cde91-d8e2-4630-9a98-e759d4b29548"&&Fresh(state.CheckedAt,150000);
+    }
+    static bool NetworkLayer(out string reason) {
+        try {
+            string file=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),@"ClaudeNetworkGuard\status.json");
+            var state=Json.Deserialize<NetworkState>(File.ReadAllText(file));
+            bool ok=ValidNetwork(state);reason=ok?"应用级网络阻断规则已核对":"网络层保护未就绪或检查已过期";return ok;
+        }catch{reason="应用级网络保护未安装或状态不可读";return false;}
+    }
     [DllImport("iphlpapi.dll")] static extern uint GetBestInterface(uint address, out uint index);
     static bool Network(out string reason) {
         try {
@@ -30,7 +42,7 @@ class BookGuard {
                 if(n.Name!="FlClash" || n.Description.IndexOf("Meta",StringComparison.OrdinalIgnoreCase)<0 || n.OperationalStatus!=OperationalStatus.Up)continue;
                 var props=n.GetIPProperties().GetIPv4Properties();if(props==null)continue;
                 foreach(string ip in new[]{"1.1.1.1","8.8.8.8"}) {uint idx;if(GetBestInterface(BitConverter.ToUInt32(IPAddress.Parse(ip).GetAddressBytes(),0),out idx)!=0||idx!=props.Index){reason="公网路由未进入 TUN";return false;}}
-                reason="本机 TUN 与 IPv4 路由通过";return true;
+                return NetworkLayer(out reason);
             }
             reason="TUN 网卡未启用";return false;
         }catch{reason="无法验证本机路由";return false;}
@@ -85,7 +97,9 @@ class BookGuard {
                     SetGate();string reason;bool local=Network(out reason);var e=ReadEvidence();bool allow=local&&Valid(e);
                     if(!allow){stable=null;if(local)reason=e==null?"等待节点与分流检查":!Fresh(e.checkedAt,12000)?"节点与分流检查已过期，启动保持锁定":e.reason??"检查失败";StopClaude();}
                     else {if(stable==null)stable=DateTime.UtcNow;if((DateTime.UtcNow-stable.Value).TotalSeconds<2){allow=false;reason="等待检查连续稳定 2 秒";}else reason="节点、分流与出口检查通过";}
-                    Atomic(Path.Combine(Data,"status.json"),Json.Serialize(new Status{allowed=allow,checkedAt=DateTime.UtcNow.ToString("o"),reason=reason,checks=e==null?new Check[0]:e.checks}));
+                    string networkReason;bool networkOk=NetworkLayer(out networkReason);
+                    var checks=(e==null||e.checks==null?new Check[0]:e.checks).Concat(new[]{new Check{id="network-layer",ok=networkOk,message=networkReason}}).ToArray();
+                    Atomic(Path.Combine(Data,"status.json"),Json.Serialize(new Status{allowed=allow,checkedAt=DateTime.UtcNow.ToString("o"),reason=reason,checks=checks}));
                     if(reason!=prior){Log((allow?"ALLOW ":"BLOCK ")+reason);prior=reason;}
                     Thread.Sleep(250);
                 }
@@ -153,6 +167,12 @@ class BookGuard {
 #endif
         if(mode=="--self-test") {
             if(Fresh(DateTime.UtcNow.AddSeconds(60).ToString("o"),12000)||Fresh("broken",12000)||Valid(null))return 10;
+            var net=new NetworkState{Status="PASS",CheckedAt=DateTime.UtcNow.ToString("o"),Provider="b78cde91-d8e2-4630-9a98-e759d4b29548",FilterCount=8};
+            if(!ValidNetwork(net)||ValidNetwork(null))return 11;
+            net.FailClosed=true;if(ValidNetwork(net))return 12;net.FailClosed=false;
+            net.CheckedAt=DateTime.UtcNow.AddMinutes(-3).ToString("o");if(ValidNetwork(net))return 13;
+            net.CheckedAt=DateTime.UtcNow.ToString("o");net.FilterCount=0;if(ValidNetwork(net))return 14;
+            net.FilterCount=8;net.Provider="wrong-owner";if(ValidNetwork(net))return 15;
             Console.WriteLine("PASS no target launched");return 0;
         }
         if(mode!="--intercept" && mode!="--launch")return 4;

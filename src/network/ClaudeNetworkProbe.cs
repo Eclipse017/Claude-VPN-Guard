@@ -21,7 +21,8 @@ class ClaudeNetworkProbe {
                 var task=socket.BeginConnect(new IPEndPoint(ip,port),null,null);
                 if(!task.AsyncWaitHandle.WaitOne(4000))throw new TimeoutException("Connect timeout");socket.EndConnect(task);
                 string detail="Connected";
-                if(udp){int sent=socket.Send(new byte[0]);detail="Zero-byte synthetic UDP accepted: "+sent;}
+                // A non-empty datagram is required: Windows may optimize away a zero-byte send.
+                if(udp){int sent=socket.Send(new byte[]{0});detail="One-byte synthetic UDP accepted by socket: "+sent;}
                 if(mode=="proxy"){
                     socket.ReceiveTimeout=6000;socket.SendTimeout=6000;
                     using(var stream=new NetworkStream(socket,false)){
@@ -31,7 +32,7 @@ class ClaudeNetworkProbe {
                         using(var ssl=new SslStream(stream,false)){ssl.ReadTimeout=6000;ssl.WriteTimeout=6000;ssl.AuthenticateAsClient("www.cloudflare.com",null,System.Security.Authentication.SslProtocols.Tls12,false);byte[] get=Encoding.ASCII.GetBytes("GET /cdn-cgi/trace HTTP/1.1\r\nHost: www.cloudflare.com\r\nConnection: close\r\n\r\n");ssl.Write(get,0,get.Length);var text=new StringBuilder();byte[] buffer=new byte[4096];int read;while((read=ssl.Read(buffer,0,buffer.Length))>0){text.Append(Encoding.UTF8.GetString(buffer,0,read));if(text.Length>32768)throw new IOException("Oversize response");}if(!text.ToString().StartsWith("HTTP/1.1 200"))throw new IOException("Neutral HTTPS failed");detail="TLS-validated neutral HTTPS via local proxy succeeded";}
                     }
                 }
-                result=new {Status="CONNECTED",Mode=mode,Address=address,Port=port,InterfaceIndex=index,Detail=detail,DurationMs=watch.ElapsedMilliseconds};
+                result=new {Status=udp?"SEND_ACCEPTED":"CONNECTED",Mode=mode,Address=address,Port=port,InterfaceIndex=index,Detail=detail,DurationMs=watch.ElapsedMilliseconds};
             }
         }catch(SocketException e){result=new {Status="SOCKET_ERROR",Mode=mode,Address=address,Port=port,InterfaceIndex=index,NativeError=e.NativeErrorCode,SocketError=e.SocketErrorCode.ToString(),DurationMs=watch.ElapsedMilliseconds};}
         catch(Exception e){result=new{Status="ERROR",Mode=mode,Address=address,Error=e.GetType().Name+": "+e.Message,DurationMs=watch.ElapsedMilliseconds};}

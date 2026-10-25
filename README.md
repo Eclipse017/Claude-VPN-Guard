@@ -2,6 +2,8 @@
 
 一个会回应、能摸头和拖动的橙发书娘桌宠，为 Windows 上的 Claude 桌面应用增加节点与分流检查。基于 [dsh-pet 独立应用模式](https://github.com/PC2005-cloud/dsh-pet)，不依赖 DeepSeek Harness，不需要模型密钥。
 
+[下载 Windows 预发布版](https://github.com/Eclipse017/ShuniangGuard/releases/tag/v0.1.0-preview.2) · [验证范围](docs/VALIDATION.md) · [素材来源](NOTICE.md)
+
 ![保护面板](docs/images/panel.png)
 
 **当前版本为 0.1.0 预发布。真实 Claude 启动与运行兼容性尚未测试；开发和验收全过程不启动 Claude。** 先使用演示版了解交互，不要把界面显示当作网络安全保证。
@@ -12,6 +14,7 @@
 - 小书娘启动、单击、双击和摸头均不会打开 Claude。只有保护面板中的明确操作才请求受保护启动。
 - Claude.exe 的 IFEO 启动入口保持拦截；保护器或桌宠未运行时也不主动移除拦截。
 - 启动前重新检查实时配置和出口；后台持续检查，失败时锁定入口并结束受保护的 Claude 包进程。
+- 集成 Claude 专用 WFP 网络保护：阻止包进程通过其他网卡直接联网，保留本机代理和 FlClash TUN。网络层未安装、失败或检查过期时，启动保护同样拒绝放行。
 - 不修改 ChatGPT、Codex、Antigravity 的 AIAppVpnGuard 程序、任务或 IFEO 项。
 - 桌宠交互完全在本地运行。此分支的模型传输层被替换为明确拒绝请求的实现。
 
@@ -25,6 +28,7 @@
 6. 节点完整传输配置的摘要匹配批准基线。
 7. 通过本机代理连接固定的中立 HTTPS 探针 `www.cloudflare.com/cdn-cgi/trace`，结合 `/connections` 校验实际代理链，再比较批准的出口 IP 与地区。此检查不访问 Claude 域名。
 8. 检查期间配置保持一致。任何未知、超时、错误、缺失或过期证据均拒绝启动。
+9. 网络层守护必须发布有效的规则回读结果，生产 provider 身份正确，且状态不超过 150 秒。网络规则由独立服务持续复核；其限制见 [网络保护说明](docs/CLAUDE-NETWORK-GUARD.md)。
 
 这是一套保守策略。复杂订阅组、IPv6 代理、多节点切换及额外登录域名需要另行扩展和验证，不能通过删除检查项来冒充支持。
 
@@ -42,7 +46,8 @@
 2. 建立只保存在本机的策略：见 [policy.example.json](policy.example.json)。`enrolled:false` 的示例永远不放行。不能用别人的出口 IP、节点摘要或路径。
 3. 在 FlClash 开启仅本机 External Controller；保持 TUN 和当前节点不变。填写控制地址，密钥从本机生效配置读取，不复制进仓库。
 4. 构建完成后，在管理员 PowerShell 7 中运行 `scripts/Install-Guard.ps1 -PolicyPath <本机策略绝对路径>`。安装器先用无网络探针验证拦截/放行，再只停用旧 Claude 任务并安装新后台。
-5. 查看 `C:\ProgramData\ShuniangGuard\status.json` 和书娘面板。控制接口不可用时会明确锁定。
+5. 按 [网络保护说明](docs/CLAUDE-NETWORK-GUARD.md) 完成独立网络规则备份、探针验收和安装。未完成时，启动保护保持锁定。
+6. 查看 `C:\ProgramData\ShuniangGuard\status.json` 和书娘面板。控制接口不可用时会明确锁定。
 
 FlClash 0.8.92 的界面路径为「工具 → 基础配置 → 外部控制器」，开启后监听 `127.0.0.1:9090`。不要为了启用检查而关闭 TUN 或切换节点。
 
@@ -59,6 +64,7 @@ npm ci
 npm test
 npm run build
 pwsh -NoLogo -NoProfile -File scripts/Build-Guard.ps1
+pwsh -NoLogo -NoProfile -File scripts/Build-NetworkGuard.ps1
 npm run preview
 ```
 
@@ -66,7 +72,7 @@ npm run preview
 
 ## 边界
 
-- 不是网络层 kill switch，不保证零泄漏、地区政策适用性或账号安全。
+- 网络层保护有明确范围，不保证零泄漏、地区政策适用性或账号安全。
 - 后台为轮询；断线与检测之间存在时间窗口。进程终止可能丢失未保存内容。
 - 中立探针证明它自己的出口和链路，不是对 Claude 服务的端到端访问测试。
 - 仅支持既定 Windows Claude 包路径；网页版、CLI、改名程序及其他设备不在覆盖范围。

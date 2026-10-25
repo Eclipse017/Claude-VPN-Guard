@@ -1,6 +1,6 @@
 {
   "name": "shuniang-vpn-guard",
-  "version": "0.1.0",
+  "version": "0.1.0-preview.2",
   "private": true,
   "description": "书娘守护：dsh-pet 独立桌宠与 Claude 启动保护",
   "scripts": {
