@@ -1,8 +1,9 @@
-param([string]$Version='0.1.0-preview.2')
+param([string]$Version='0.1.0-preview.2',[string]$OutputRoot)
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 $name='ShuniangGuard-'+$Version+'-win-x64'
-$out=Join-Path $root ('artifacts\release\'+$name)
+if(!$OutputRoot){$OutputRoot=Join-Path $root 'artifacts\release'}
+$out=Join-Path $OutputRoot $name
 if(Test-Path $out){throw 'Choose a fresh version/output directory; release builds never overwrite a prior bundle'}
 New-Item -ItemType Directory -Path $out,(Join-Path $out 'app\vendor\dsh-pet\assets'),(Join-Path $out 'app\dist\guard') -Force | Out-Null
 Copy-Item (Join-Path $root 'node_modules\electron\dist') (Join-Path $out 'runtime') -Recurse
