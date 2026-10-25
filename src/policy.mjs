@@ -49,7 +49,7 @@ export function inspectPolicy(policy, snapshot) {
 }
 export function validEvidence(value, now = Date.now(), ttl = 12000) {
   const age = now - Date.parse(value?.checkedAt);
-  const ids=['policy','mode','tun','ipv6','port','node-identity','selection','group','disk-rules','live-rules','dns','exit','stable'];
+  const ids=['policy','mode','tun','ipv6','port','node-identity','selection','group','disk-rules','live-rules','dns','exit','service-region','stable'];
   return value?.schema === 1 && value?.allowed === true && value?.checks?.length === ids.length &&
     ids.every(id=>value.checks.filter(c=>c.id===id&&c.ok===true).length===1) && Number.isFinite(age) && age >= 0 && age < ttl;
 }

@@ -1,4 +1,5 @@
 async function refresh(){try{const s=await window.book.status();document.querySelector('#state').textContent=s.preview?'演示 · 启动已禁用':s.allowed?'检查通过':'Claude 已锁定';document.querySelector('#reason').textContent=s.reason;document.querySelector('#launch').disabled=!s.allowed||s.preview;const ul=document.querySelector('#checks');ul.replaceChildren();for(const c of s.checks||[]){const li=document.createElement('li');li.className=c.ok?'ok':'';li.textContent=c.message;ul.append(li);}}catch{document.querySelector('#launch').disabled=true;}}
 document.querySelector('#refresh').onclick=refresh;
+document.querySelector('#setup').onclick=()=>window.book.action('setup');
 document.querySelector('#launch').onclick=async()=>{document.querySelector('#launch').disabled=true;const r=await window.book.action('launch');document.querySelector('#result').textContent=r.message||'';await refresh();};
 refresh();setInterval(refresh,1000);

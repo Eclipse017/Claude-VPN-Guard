@@ -19,7 +19,7 @@ try {
   $temporary=Join-Path $data 'status.removing.tmp'
   @{Status='REMOVING';FailClosed=$true;FilterCount=0;CheckedAt=([DateTime]::UtcNow.ToString('o'));Reason='Network protection rollback in progress'}|ConvertTo-Json|Set-Content -LiteralPath $temporary
   $status=Join-Path $data 'status.json'
-  if(Test-Path $status){[IO.File]::Replace($temporary,$status,$null)}else{[IO.File]::Move($temporary,$status)}
+  if(Test-Path $status){[IO.File]::Replace($temporary,$status,[NullString]::Value)}else{[IO.File]::Move($temporary,$status)}
   & (Join-Path $root 'ClaudeNetworkGuard.exe') remove (Join-Path $root 'policy.json') (Join-Path $data 'rollback-result.json')
   if($LASTEXITCODE -ne 0){throw (Get-Content (Join-Path $data 'rollback-result.json') -Raw)}
   if($service){Remove-Service -Name 'ClaudeNetworkGuard'}

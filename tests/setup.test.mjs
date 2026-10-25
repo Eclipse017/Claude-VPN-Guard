@@ -1,0 +1,13 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {parse} from 'yaml';
+import {regionAllowed,REGION_EXPIRES} from '../src/regions.mjs';
+import {proposedRules,applyRules,buildPolicy,GROUP} from '../src/setup.mjs';
+const base={mode:'rule',proxies:[{name:'test-node',type:'ss',server:'example.invalid',password:'fixture-only'}],'proxy-groups':[{name:'OTHER',type:'select',proxies:['DIRECT']}],rules:['DOMAIN-SUFFIX,example.org,OTHER','MATCH,DIRECT'],tun:{enable:true},secret:'fixture-secret'};
+test('service regions reject unsupported, unknown, expired and subregional results',()=>{for(const code of ['CN','HK','MO','XX','UA',null])assert.equal(regionAllowed(code),false);for(const code of ['TW','US','JP','SG','DE'])assert.equal(regionAllowed(code),true);assert.equal(regionAllowed('TW',Date.parse(REGION_EXPIRES)),false);});
+test('only Claude/probe rules and one dedicated group are added',()=>{const next=parse(proposedRules(JSON.stringify(base),'test-node'));assert.deepEqual(next.rules.slice(5),base.rules);assert.deepEqual(next['proxy-groups'].slice(0,-1),base['proxy-groups']);assert.equal(next.secret,base.secret);assert.deepEqual(next.tun,base.tun);assert.equal(next.rules[0],`DOMAIN-SUFFIX,anthropic.com,${GROUP}`);});
+test('foreign dedicated group is never overwritten',()=>{assert.throws(()=>proposedRules(JSON.stringify({...base,'proxy-groups':[{name:GROUP,proxies:['DIRECT']}]}),'test-node'));});
+test('concurrent VPN edit is rejected before write',async()=>{let writes=0;await assert.rejects(applyRules({file:'fixture.yaml',text:'original'},'test-node','backups',{read:()=> 'changed',write:()=>writes++}));assert.equal(writes,0);});
+test('failed core reload restores the original config',async()=>{const text=JSON.stringify(base);let current=text,temp='',backups=0,reloads=0;const io={read:()=>current,write:(p,v)=>temp=v,replace:()=>current=temp,backup:()=>backups++,reload:async()=>{if(++reloads===1)throw Error('fixture failure');}};await assert.rejects(applyRules({file:'fixture.yaml',text},'test-node','backups',io));assert.equal(current,text);assert.equal(backups,1);assert.equal(reloads,2);});
+test('unsupported exit cannot be enrolled',()=>{assert.throws(()=>buildPolicy({disk:base},'test-node',{ip:'192.0.2.1',country:'CN',chainVerified:true}));});
+test('concurrent change after reload failure is retained instead of overwritten',async()=>{const text=JSON.stringify(base);let current=text,temp='';const io={read:()=>current,write:(p,v)=>temp=v,replace:()=>current=temp,backup:()=>{},reload:async()=>{current='external-update';throw Error('reload failed');}};await assert.rejects(applyRules({file:'fixture.yaml',text},'test-node','backups',io),/未覆盖新内容/);assert.equal(current,'external-update');});

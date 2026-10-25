@@ -53,7 +53,7 @@ class BookGuard {
     }
     static Evidence ReadEvidence() {try{return Json.Deserialize<Evidence>(File.ReadAllText(Path.Combine(Data,"evidence.json")));}catch{return null;}}
     static bool Valid(Evidence e) {
-        string[] ids={"policy","mode","tun","ipv6","port","node-identity","selection","group","disk-rules","live-rules","dns","exit","stable"};
+        string[] ids={"policy","mode","tun","ipv6","port","node-identity","selection","group","disk-rules","live-rules","dns","exit","service-region","stable"};
         return e!=null&&e.schema==1&&e.allowed&&Fresh(e.checkedAt,12000)&&e.checks!=null&&
             e.checks.Length==ids.Length&&ids.All(id=>e.checks.Count(c=>c.id==id&&c.ok)==1);
     }
@@ -167,6 +167,10 @@ class BookGuard {
 #endif
         if(mode=="--self-test") {
             if(Fresh(DateTime.UtcNow.AddSeconds(60).ToString("o"),12000)||Fresh("broken",12000)||Valid(null))return 10;
+            var evidence=new Evidence{schema=1,allowed=true,checkedAt=DateTime.UtcNow.ToString("o"),checks=new[]{"policy","mode","tun","ipv6","port","node-identity","selection","group","disk-rules","live-rules","dns","exit","service-region","stable"}.Select(id=>new Check{id=id,ok=true}).ToArray()};
+            if(!Valid(evidence))return 16;
+            evidence.checks.First(c=>c.id=="service-region").ok=false;if(Valid(evidence))return 17;
+            evidence.checks=evidence.checks.Where(c=>c.id!="service-region").ToArray();if(Valid(evidence))return 18;
             var net=new NetworkState{Status="PASS",CheckedAt=DateTime.UtcNow.ToString("o"),Provider="b78cde91-d8e2-4630-9a98-e759d4b29548",FilterCount=8};
             if(!ValidNetwork(net)||ValidNetwork(null))return 11;
             net.FailClosed=true;if(ValidNetwork(net))return 12;net.FailClosed=false;

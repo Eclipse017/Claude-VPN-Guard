@@ -8,4 +8,4 @@
 
 项目作者提供的代码和本项目生成的素材按根目录 MIT License 分发；第三方代码保留各自许可。第三方商标不在许可范围内。书娘是非官方陪伴角色，与 Anthropic、Claude、DeepSeek 无隶属或背书关系。
 
-发布包包含 Electron、Chromium、Node.js 等运行时，随包保留其 LICENSE 与第三方声明。
+发布包包含 Electron、Chromium、Node.js、PowerShell 7 等运行时，随包保留其 LICENSE 与第三方声明。PowerShell 7.6.8 来自 Microsoft 官方 GitHub 发布，构建时核对发布包 SHA256 与 pwsh.exe 的 Microsoft 签名；本项目自己的安装器尚未代码签名。

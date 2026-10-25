@@ -5,6 +5,7 @@ import http from 'node:http';
 import tls from 'node:tls';
 import { parse } from 'yaml';
 import { inspectPolicy, hash } from './policy.mjs';
+import {regionAllowed} from './regions.mjs';
 
 const PROBE_HOST = 'www.cloudflare.com';
 const PROBE_PATH = '/cdn-cgi/trace';
@@ -72,6 +73,7 @@ export async function collect(policy, io = {apiGet, proxyTrace, readFileSync}) {
     const exitMatches = exit.chainVerified === true && policy.allowedExitIps.includes(exit.ip) && exit.country === policy.country;
     checks.push({id:'exit', ok: exitMatches,
       message: exitMatches ? '中立 HTTPS 站点出口符合批准基线' : '出口或代理链与批准基线不一致'});
+    checks.push({id:'service-region',ok:regionAllowed(exit.country),message:regionAllowed(exit.country)?'出口地区在已核验的服务地区列表内':'出口地区不支持、无法识别或地区列表已过期'});
     // Check the active state a second time, closing the profile-switch race during a slow probe.
     const [afterConfig, afterProxies, afterRules] = await Promise.all(['/configs','/proxies','/rules'].map(p => io.apiGet(controller, secret, p)));
     const afterDisk = io.readFileSync(policy.configPath, 'utf8');

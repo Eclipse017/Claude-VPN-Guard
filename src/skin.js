@@ -4,6 +4,14 @@
   const image = new Image();image.src='./shuniang-atlas.png';
   let instance, face=0, interactionUntil=0, state={allowed:false,reason:'等待保护检查'};
   window.__bookDebug={painted:false,interaction:'idle'};
+  // Calm default: no ballistic release, slingshot, gravity, or automatic roaming.
+  // Dragging still follows the pointer; release keeps the current position.
+  PetSprite.prototype.startThrow=function(px,py){
+    this.stopThrow();this.stopMove();this.stopDragFollow();
+    this.customPos={rx:(px+this.halfW)/VIEW.w,ry:(py+this.halfH)/VIEW.h};this.position();
+    window.__bookDebug.motion='calm';window.__bookDebug.throwDisabled=true;
+  };
+  PetSprite.prototype.startMoveDrive=function(){this.pendingMove=null;this.stopMove();};
   const faces={idle:0,blink:1,wave:2,read:3,blocked:4,pat:5};
   const lines={pat:'唔……再摸一下，就再读一页。',read:'把这一页读完，再继续忙吧。',wave:'我在这里，入口也在认真守着。'};
   function say(text){if(!instance)return;instance.bookBubble.textContent=text;instance.bookBubble.style.opacity='1';clearTimeout(instance.bookBubbleTimer);instance.bookBubbleTimer=setTimeout(()=>instance.bookBubble.style.opacity='0',4200);}
@@ -29,7 +37,7 @@
           let index=performance.now()<interactionUntil?face:state.allowed?(performance.now()%5300<170?1:0):4;
           if(this.dragState.active)index=2;
           const cw=image.naturalWidth/3,ch=image.naturalHeight/2;
-          ctx.clearRect(0,0,640,360);const sway=Math.sin(performance.now()/1050)*1.5;
+          ctx.clearRect(0,0,640,360);const sway=window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:Math.sin(performance.now()/2400)*0.65;
           ctx.drawImage(image,(index%3)*cw,Math.floor(index/3)*ch,cw,ch,150,10+sway,340,340);
           window.__bookDebug.painted=true;window.__bookDebug.frame=index;
         }

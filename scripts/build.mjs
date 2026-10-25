@@ -27,6 +27,7 @@ await build({entryPoints:[join(vendor,'src/app/main.ts')],bundle:true,platform:'
 await build({entryPoints:[join(vendor,'src/shared/index.ts')],bundle:true,platform:'browser',format:'iife',globalName:'PetShared',target:'chrome130',outfile:join(vendor,helper,'shared-core.js')});
 mkdirSync('dist/guard',{recursive:true});
 await build({entryPoints:['src/sensor.mjs'],bundle:true,platform:'node',format:'cjs',target:'node22',outfile:'dist/guard/sensor.cjs'});
+await build({entryPoints:['src/setup.mjs'],bundle:true,platform:'node',format:'cjs',target:'node22',outfile:'dist/setup.cjs'});
 // Bundling changes import.meta.url; an explicit generated entry is required for the executable sensor.
 let sensor=readFileSync('dist/guard/sensor.cjs','utf8');sensor+='\nmain().catch(()=>{process.exitCode=2;});\n';writeFileSync('dist/guard/sensor.cjs',sensor);
 console.log('Built dsh-pet standalone app, original sprite renderer and offline model stub.');

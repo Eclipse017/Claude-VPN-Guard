@@ -13,6 +13,6 @@ try {
   $result|Add-Member -NotePropertyName CheckedAt -NotePropertyValue (Get-Date -Format o)
   $result|ConvertTo-Json -Depth 10|Set-Content -LiteralPath $temporary
   $status=Join-Path $data 'status.json'
-  if(Test-Path $status){[IO.File]::Replace($temporary,$status,$null)}else{[IO.File]::Move($temporary,$status)}
+  if(Test-Path $status){[IO.File]::Replace($temporary,$status,[NullString]::Value)}else{[IO.File]::Move($temporary,$status)}
   exit $code
 } finally {if($held){$mutex.ReleaseMutex()};$mutex.Dispose()}
