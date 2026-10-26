@@ -9,14 +9,14 @@ try {
  $account=Invoke-RestMethod -Uri 'https://api.github.com/user' -Headers $headers
  if($account.login -ne 'Eclipse017'){throw 'Unexpected GitHub account'}
  if($CreateRepository){
-  $body=@{name='ShuniangGuard';description='书娘守护：基于 dsh-pet 的独立桌宠与 Claude 节点/分流启动检查';private=$false;auto_init=$false;has_wiki=$false}|ConvertTo-Json
+  $body=@{name='Claude-VPN-Guard';description='Claude VPN守护：基于 dsh-pet 的独立桌宠与 Claude 节点/分流启动检查';private=$false;auto_init=$false;has_wiki=$false}|ConvertTo-Json
   $repo=Invoke-RestMethod -Method Post -Uri 'https://api.github.com/user/repos' -Headers $headers -ContentType 'application/json' -Body ([Text.Encoding]::UTF8.GetBytes($body))
   [pscustomobject]@{url=$repo.html_url;visibility=$repo.visibility}|ConvertTo-Json
  }
  if($ReleaseZip){
   if(!$SetupExe -or !$ReleaseNotes){throw '发布需要安装程序与已核对的说明文件'}
-  $body=@{tag_name=$Tag;name='书娘守护 '+$Tag;prerelease=$true;draft=$true;body=(Get-Content -LiteralPath $ReleaseNotes -Raw)}|ConvertTo-Json
-  $release=Invoke-RestMethod -Method Post -Uri 'https://api.github.com/repos/Eclipse017/ShuniangGuard/releases' -Headers $headers -ContentType 'application/json' -Body ([Text.Encoding]::UTF8.GetBytes($body))
+  $body=@{tag_name=$Tag;name='Claude VPN守护 '+$Tag;prerelease=$true;draft=$true;body=(Get-Content -LiteralPath $ReleaseNotes -Raw)}|ConvertTo-Json
+  $release=Invoke-RestMethod -Method Post -Uri 'https://api.github.com/repos/Eclipse017/Claude-VPN-Guard/releases' -Headers $headers -ContentType 'application/json' -Body ([Text.Encoding]::UTF8.GetBytes($body))
   $upload=$release.upload_url -replace '\{.*\}$',''
   foreach($file in @($SetupExe,$ReleaseZip,(Join-Path (Split-Path $ReleaseZip) 'SHA256SUMS.txt'))){
    $url=$upload+'?name='+[Uri]::EscapeDataString([IO.Path]::GetFileName($file))

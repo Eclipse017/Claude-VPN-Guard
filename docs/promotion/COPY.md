@@ -1,6 +1,6 @@
 # 图文文案
 
-[查看配图](README.md) · [下载素材包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip)
+[查看配图](README.md) · [下载素材包](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip)
 
 ## 标题
 
@@ -8,7 +8,7 @@
 
 ## 正文
 
-书娘守护：会互动的桌面小书娘 📚
+Claude VPN守护：会互动的桌面小书娘 📚
 
 一键安装、中文向导、本地互动，日常使用从这三件事开始。
 

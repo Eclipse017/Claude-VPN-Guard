@@ -1,6 +1,6 @@
 # 使用教程
 
-[下载安装包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-0.2.0-preview.1-Setup.exe) · [返回首页](../README.md) · [常见问题](FAQ.md)
+[下载安装包](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-0.2.0-preview.1-Setup.exe) · [返回首页](../README.md) · [常见问题](FAQ.md)
 
 ## 使用条件
 
@@ -64,7 +64,7 @@ FlClash 的常见路径为「工具 → 基础配置 → 外部控制器」，�
 
 ## 仅体验与卸载
 
-**仅体验桌宠**：下载[完整 ZIP](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-0.2.0-preview.1-win-x64.zip)，解压后运行「预览书娘.cmd」。该入口禁用系统修改与 Claude 启动。
+**仅体验桌宠**：下载[完整 ZIP](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-0.2.0-preview.1-win-x64.zip)，解压后运行「预览书娘.cmd」。该入口禁用系统修改与 Claude 启动。
 
 **卸载安装版**：先退出书娘，再从 Windows「已安装的应用」卸载。只移除本次安装登记的保护；复用的独立网络规则保留。恢复资料保留在 ProgramData。
 

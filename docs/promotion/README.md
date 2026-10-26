@@ -1,6 +1,6 @@
 # 图文素材
 
-[下载图文包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip) · [复制标题与正文](COPY.md) · [使用教程](../USER-GUIDE.md)
+[下载图文包](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip) · [复制标题与正文](COPY.md) · [使用教程](../USER-GUIDE.md)
 
 7 张 1080 × 1440 PNG，按编号使用。素材包包含图片、标题、正文和简单教程，可直接用于图文介绍。
 
@@ -22,7 +22,7 @@
 
 ## 互动动画与状态截图
 
-[18 秒互动视频 MP4](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-v0.2.0.mp4) · [完整动画素材包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-Demo-v0.2.0.zip) · [VPN 未开启截图](../media/vpn-off-blocked.png)
+[18 秒互动视频 MP4](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-v0.2.0.mp4) · [完整动画素材包](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-Demo-v0.2.0.zip) · [VPN 未开启截图](../media/vpn-off-blocked.png)
 
 动画素材包包含 MP4、完整 GIF、三种互动的独立动图与静态图，以及 VPN 未开启时的锁定状态图。桌面为合成场景，气泡放大展示；锁定图使用模拟状态，不代表真实断网测试。
 

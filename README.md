@@ -1,17 +1,17 @@
-# 书娘守护 · Shuniang Guard
+# Claude VPN守护
 
 一个可以摸头、打招呼、陪你读书的 Windows 桌宠，提供中文配置向导和 Claude 启动前检查。
 
-**[下载安装包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-0.2.0-preview.1-Setup.exe)** · **[下载图文素材包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip)** · [使用教程](docs/USER-GUIDE.md) · [常见问题](docs/FAQ.md)
+**[下载安装包](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-0.2.0-preview.1-Setup.exe)** · **[下载图文素材包](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip)** · [使用教程](docs/USER-GUIDE.md) · [常见问题](docs/FAQ.md)
 
 <p align="center"><img src="docs/media/interaction.gif" width="540" alt="书娘在桌面上打招呼、回应摸头、一起读书的互动演示"></p>
 
-18 秒看三种互动：[高清 MP4](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-v0.2.0.mp4) · [完整动画素材包](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-Demo-v0.2.0.zip)。桌面为合成场景，使用当前版本的表情与台词。
+18 秒看三种互动：[高清 MP4](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-v0.2.0.mp4) · [完整动画素材包](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-Demo-v0.2.0.zip)。桌面为合成场景，使用当前版本的表情与台词。
 
 <details>
 <summary>查看封面</summary>
 
-<p align="center"><img src="docs/media/01-cover.png" width="540" alt="书娘守护：一键安装、中文向导、桌宠互动"></p>
+<p align="center"><img src="docs/media/01-cover.png" width="540" alt="Claude VPN守护：一键安装、中文向导、桌宠互动"></p>
 
 </details>
 
@@ -34,7 +34,7 @@
 
 **安装、配置、普通点击和摸头均不会自动打开 Claude。** 应用安装完成不等于系统保护已启用；请以向导的成功状态为准。
 
-只想体验桌宠，可以下载[完整 ZIP](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-0.2.0-preview.1-win-x64.zip)，解压后运行「预览书娘.cmd」。
+只想体验桌宠，可以下载[完整 ZIP](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-0.2.0-preview.1-win-x64.zip)，解压后运行「预览书娘.cmd」。
 
 [查看完整教程与排查方法 →](docs/USER-GUIDE.md)
 
@@ -61,9 +61,9 @@
 | --- | --- |
 | 7 张配图：封面、功能、教程、适用范围 | [在线查看](docs/promotion/README.md) |
 | 标题与正文 | [可直接复制的文案](docs/promotion/COPY.md) |
-| 图文素材包 | [下载 ZIP](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip) |
-| 互动视频与动画素材（含 VPN 未开启截图） | [MP4](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-v0.2.0.mp4) · [完整 ZIP](https://github.com/Eclipse017/ShuniangGuard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-Demo-v0.2.0.zip) |
-| 安装包、便携包与校验文件 | [版本发布页](https://github.com/Eclipse017/ShuniangGuard/releases/tag/v0.2.0-preview.1) |
+| 图文素材包 | [下载 ZIP](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Promo-v0.2.0.zip) |
+| 互动视频与动画素材（含 VPN 未开启截图） | [MP4](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-v0.2.0.mp4) · [完整 ZIP](https://github.com/Eclipse017/Claude-VPN-Guard/releases/download/v0.2.0-preview.1/ShuniangGuard-Interaction-Demo-v0.2.0.zip) |
+| 安装包、便携包与校验文件 | [版本发布页](https://github.com/Eclipse017/Claude-VPN-Guard/releases/tag/v0.2.0-preview.1) |
 
 图中界面来自程序演示截图，示例路径与节点不是实际用户配置。封面角色为 AI 宣传插画。
 
@@ -71,4 +71,4 @@
 
 基于 [dsh-pet](https://github.com/PC2005-cloud/dsh-pet) 独立版，按 [MIT License](LICENSE) 开源。角色素材含 AI 生成，第三方代码保留原许可。
 
-书娘守护是非官方项目，与 Anthropic、Claude、DeepSeek 无隶属或背书关系。[素材与许可说明](NOTICE.md)
+Claude VPN守护是非官方项目，与 Anthropic、Claude、DeepSeek 无隶属或背书关系。[素材与许可说明](NOTICE.md)

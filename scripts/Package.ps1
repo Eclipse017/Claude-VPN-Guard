@@ -35,7 +35,7 @@ if(Test-Path $nodeLicense){Copy-Item $nodeLicense (Join-Path $out 'app\dist\guar
 @('@echo off','start "" "%~dp0runtime\electron.exe" "%~dp0app\src\main.cjs" --preview') | Set-Content (Join-Path $out '预览书娘.cmd') -Encoding ascii
 @('@echo off','start "" "%~dp0runtime\electron.exe" "%~dp0app\src\main.cjs"') | Set-Content (Join-Path $out '书娘守护.cmd') -Encoding ascii
 @('@echo off','start "" "%~dp0runtime\electron.exe" "%~dp0app\src\main.cjs" --setup') | Set-Content (Join-Path $out '配置向导.cmd') -Encoding ascii
-@('书娘守护 · 独立安装预发布版','普通用户请下载 Setup.exe，双击安装后按中文向导操作。','ZIP 解压后可双击「配置向导.cmd」；无需 Node.js、PowerShell 或旧保护器。','启用系统保护需一次管理员确认；不覆盖其他保护器，不会打开 Claude。','仅支持 Windows x64、FlClash、Windows 商店版 Claude；要求独立节点配置。','详见 app\README.md。源代码：https://github.com/Eclipse017/ShuniangGuard','全新机器系统服务安装、真实 Claude 客户端兼容性未实测；不是零泄漏或防封号保证。') | Set-Content (Join-Path $out '先读我.txt') -Encoding utf8
+@('Claude VPN守护 · 独立安装预发布版','普通用户请下载 Setup.exe，双击安装后按中文向导操作。','ZIP 解压后可双击「配置向导.cmd」；无需 Node.js、PowerShell 或旧保护器。','启用系统保护需一次管理员确认；不覆盖其他保护器，不会打开 Claude。','仅支持 Windows x64、FlClash、Windows 商店版 Claude；要求独立节点配置。','详见 app\README.md。源代码：https://github.com/Eclipse017/Claude-VPN-Guard','全新机器系统服务安装、真实 Claude 客户端兼容性未实测；不是零泄漏或防封号保证。') | Set-Content (Join-Path $out '先读我.txt') -Encoding utf8
 $manifest=Get-ChildItem -LiteralPath $out -File -Recurse | ForEach-Object{[pscustomobject]@{path=$_.FullName.Substring($out.Length+1).Replace('\','/');size=$_.Length;sha256=(Get-FileHash -LiteralPath $_.FullName).Hash}}
 $manifest | ConvertTo-Json -Depth 3 | Set-Content (Join-Path $out 'manifest.json') -Encoding utf8
 $zip=$out+'.zip'
